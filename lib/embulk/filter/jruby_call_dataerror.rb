@@ -25,8 +25,14 @@ module Embulk
       def add(page)
         # filtering code:
         page.each do |record|
-          raise ::Embulk::DataError.new("embulk-filter-jruby_call_dataerror")
+          begin
+            page_builder.add([record.to_s])
+            raise ::StandardError, "eeee"
+          rescue => e
+            raise ::Embulk::DataError.new("embulk-filter-jruby_call_dataerror: #{e}")
+          end
         end
+
       end
 
       def finish
